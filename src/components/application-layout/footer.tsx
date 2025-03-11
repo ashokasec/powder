@@ -1,4 +1,4 @@
-import { space_grotesk } from "@/lib/fonts";
+import { space_grotesk } from "@/lib/misc/fonts";
 import Link from "next/link";
 import React from "react";
 

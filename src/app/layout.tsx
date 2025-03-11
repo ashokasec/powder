@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { APP } from "@/config";
-import { geist_mono, geist_sans } from "@/lib/fonts";
+import { APP_NAME } from "@/lib/constants/app"
+import { geist_mono, geist_sans } from "@/lib/misc/fonts";
 import Provider from "@/components/ui/provider";
 
 export const metadata: Metadata = {
-  title: `${APP.name} : No Hints`,
+  title: `${APP_NAME} : No Hints`,
   description: "lol",
 };
 
@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geist_sans.variable} ${geist_mono.variable} antialiased bg-cover bg-no min-h-screen`}
+        className={`${geist_sans.variable} ${geist_mono.variable} antialiased bg-cover bg-no min-h-screen overflow-x-hidden`}
       >
         <Provider>{children}</Provider>
       </body>
