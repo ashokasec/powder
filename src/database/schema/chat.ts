@@ -1,5 +1,4 @@
-import { PowderMessageType, UserMessageType } from "@/lib/types/chat";
-import mongoose, { InferSchemaType, Schema, Types } from "mongoose";
+import mongoose, { Schema, Types } from "mongoose";
 
 interface ChatModelType extends Document {
     chatId: string;
@@ -9,21 +8,21 @@ interface ChatModelType extends Document {
     updatedAt: Date;
 }
 
-const MessageSchema = new Schema<UserMessageType | PowderMessageType>(
+interface ChatType extends Document {
+    role: "user" | "assistant";
+    content: string;
+    chatId: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+const MessageSchema = new Schema<ChatType>(
     {
-        from: { type: String, enum: ["user", "powder"], required: true },
-        text: { type: String },
-        code: { type: String, default: null },
-        codeLink: { type: String, default: null },
-        isGenerated: { type: Boolean, default: false },
-        hasCode: { type: Boolean, default: false },
-        preface: { type: String, default: "" },
-        emailTemplateName: { type: String, default: "" },
-        codeBreakdown: { type: [String], default: [] },
-        summary: { type: String, default: "" },
+        role: { type: String, required: true },
+        content: { type: String },
         chatId: { type: String, ref: "Chat", required: true },
     },
-    { timestamps: { createdAt: true, updatedAt: false }, discriminatorKey: "from" }
+    { timestamps: { createdAt: true, updatedAt: false }, discriminatorKey: "role" }
 );
 
 const ChatSchema = new Schema(
@@ -35,6 +34,5 @@ const ChatSchema = new Schema(
     { timestamps: true }
 );
 
-export const MessageModel = mongoose.models.Message as mongoose.Model<UserMessageType | PowderMessageType> || mongoose.model<UserMessageType | PowderMessageType>("Message", MessageSchema);
+export const MessageModel = mongoose.models.Message as mongoose.Model<ChatType> || mongoose.model<ChatType>("Message", MessageSchema);
 export const ChatModel = mongoose.models.Chat as mongoose.Model<ChatModelType> || mongoose.model<ChatModelType>("Chat", ChatSchema);
-export type MessageType = InferSchemaType<typeof MessageSchema>

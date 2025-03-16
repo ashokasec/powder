@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid";
 import { ChatModel, MessageModel } from "@/database/schema/chat"
 import connectDB from "@/lib/misc/connect-db";
-import { PowderMessageType, UserMessageType } from "@/lib/types/chat";
+import { ChatType } from "@/lib/types/chat";
 
 export const createNewChat = async ({
     title,
@@ -23,15 +23,12 @@ export const createNewChat = async ({
 
         const savedChat = await chat.save();
 
-        console.log("saved chat", savedChat)
-
         const message = new MessageModel({
-            from: "user",
-            text: prompt,
+            role: "user",
+            content: prompt,
             chatId: savedChat.chatId,
         });
 
-        console.log(message)
         const savedMessage = await message.save();
 
         savedChat.messages.push(savedMessage._id);
@@ -51,7 +48,7 @@ export const getChatByChatId = async (chatId: string) => {
             path: "messages",
             select: "-__v -_id -chatId" // Exclude fields from messages
         })
-        .lean()
+        .lean<{ chatId: string; title: string; messages: ChatType[], createdAt: Date }>()
         .exec();
 
     if (!chat) return null;
@@ -59,24 +56,10 @@ export const getChatByChatId = async (chatId: string) => {
     return {
         id: chat.chatId,
         title: chat.title,
-        messages: chat.messages.map((message: any) => {
-            if (message.from === "powder") {
-                return {
-                    from: "powder",
-                    preface: message.preface,
-                    codeLink: message.codeLink,
-                    isGenerated: message.isGenerated,
-                    codeBreakdown: message.codeBreakdown,
-                    summary: message.summary,
-                    createdAt: message.createdAt,
-                } as PowderMessageType
-            }
-            else {
-                return {
-                    from: "user",
-                    text: message.text,
-                    createdAt: message.createdAt,
-                } as UserMessageType;
+        messages: chat.messages.map((item) => {
+            return {
+                role: item.role,
+                content: item.content
             }
         }),
         createdAt: chat.createdAt,
@@ -94,4 +77,25 @@ export const getAllChats = async () => {
         }
     }).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
     return chat
+}
+
+export const createNewMessage = async ({ role, content, chatId }: { role: "assistant" | "user", content: string; chatId: string }) => {
+    await connectDB()
+
+    const chat = await ChatModel.findOne({ chatId })
+
+    if (!chat) return null
+
+    const message = new MessageModel({
+        role,
+        content,
+        chatId,
+    });
+
+    const savedMessage = await message.save();
+
+    chat.messages.push(savedMessage._id);
+    await chat.save();
+
+    return savedMessage.content as string;
 }

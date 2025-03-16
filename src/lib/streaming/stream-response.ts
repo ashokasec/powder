@@ -1,4 +1,4 @@
-export function streamResponse(stream: ReadableStream<any>) {
+export function streamResponse(stream: ReadableStream<Uint8Array>) {
     return new Response(stream, {
         headers: {
             "Content-Type": "text/event-stream",

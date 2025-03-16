@@ -1,13 +1,14 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { geist_sans } from "@/lib/misc/fonts";
 import { Code, Copy, TvMinimal } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CodeBlock from "./code-block-tab";
 import EmailPreview from "./email-preview-tab";
+import { ChatType } from "@/lib/types/chat";
 
 export type CurrentTabType = "code" | "preview";
 
@@ -98,22 +99,22 @@ export const TabHeaders = ({
   );
 };
 
-const CodeAndPreview = ({
-  jsx,
-  isLLMResponseDone,
-}: {
-  jsx: CodeType["jsx"];
-  isLLMResponseDone: boolean;
-}) => {
+const CodeAndPreview = ({ chats }: { chats: ChatType[] }) => {
   const [currentTab, setCurrentTab] = useState<CurrentTabType>("code");
 
-  useEffect(() => {
-    if (isLLMResponseDone === true) {
-      setTimeout(() => {
-        setCurrentTab("preview");
-      }, 1000);
+  function getPowdersLastResponse() {
+    if (chats.length > 1) {
+      const result = chats.findLast((chat) => chat.role === "assistant");
+      console.log(result);
+      if (!result) {
+        return null;
+      }
+      return result;
     }
-  }, [isLLMResponseDone]);
+    return null;
+  }
+
+  const powdersLastResponse = getPowdersLastResponse();
 
   return (
     <div className="bg-transparent h-screen w-full backdrop-blur-xl">
@@ -122,9 +123,22 @@ const CodeAndPreview = ({
         className="w-full"
         onValueChange={(value) => setCurrentTab(value as CurrentTabType)}
       >
-        <TabHeaders currentTab={currentTab} jsx={jsx} />
-        <CodeBlock jsx={jsx} />
-        <EmailPreview jsx={jsx} />
+        <TabHeaders
+          currentTab={currentTab}
+          jsx={
+            (powdersLastResponse &&
+              JSON.parse(powdersLastResponse.content).code) ||
+            ""
+          }
+        />
+        <CodeBlock
+          jsx={
+            (powdersLastResponse &&
+              JSON.parse(powdersLastResponse.content).code) ||
+            ""
+          }
+        />
+        <EmailPreview />
       </Tabs>
     </div>
   );

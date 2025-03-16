@@ -34,17 +34,17 @@ export default function AppSidebar({
         } border-b font-medium`}
       >
         <Link href="/" className="flex items-center justify-center">
-          <span className="grid w-6 text-gray-300 place-items-center">
+          <span className="grid w-6 text-gray-100 place-items-center">
             <Flame className="w-5" />
           </span>
-        {open && <span className="text-gray-300 ml-2 tracking-wide" style={arOneSans.style}>{APP_NAME}</span>}
+        {open && <span className="text-gray-100 ml-2 tracking-wide" style={arOneSans.style}>{APP_NAME}</span>}
         </Link>
         {open && (
                 <SidebarMenuButton
                   tooltip={open ? "Close Sidebar" : "Open Sidebar"}
                   asChild
                 >
-                  <SidebarTrigger className="text-gray-400 transition-all w-fit" />
+                  <SidebarTrigger className="text-white transition-all w-fit" />
                 </SidebarMenuButton>
         )}
       </SidebarHeader>
@@ -53,7 +53,7 @@ export default function AppSidebar({
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton tooltip="New Email" asChild>
-                <Link href="/" className="!text-gray-300  hover:bg-gray-200/5">
+                <Link href="/" className="!text-gray-100  hover:bg-gray-200/5">
                   <span>
                     <Plus size={18} />
                   </span>
@@ -63,7 +63,7 @@ export default function AppSidebar({
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton tooltip="History" asChild>
-                <Link href="/" className="!text-gray-300  hover:bg-gray-200/5">
+                <Link href="/" className="!text-gray-100  hover:bg-gray-200/5">
                   <span>
                     <History size={18} />
                   </span>
@@ -81,7 +81,7 @@ export default function AppSidebar({
                   tooltip={open ? "Close Sidebar" : "Open Sidebar"}
                   asChild
                 >
-                  <SidebarTrigger className="text-gray-400 transition-all w-fit" />
+                  <SidebarTrigger className="text-white transition-all w-fit" />
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
