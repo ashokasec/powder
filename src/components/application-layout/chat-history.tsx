@@ -5,7 +5,7 @@ import { useServerAction } from "zsa-react";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { geist_sans } from "@/lib/misc/fonts";
-import { getAllChatsAction } from "@/lib/actions/chat";
+import { getChats } from "@/lib/actions/chat";
 
 const ChatHistory = () => {
   const [history, setHistory] = useState<
@@ -17,7 +17,7 @@ const ChatHistory = () => {
   >([]);
 
   const { execute, isPending, isSuccess, status } = useServerAction(
-    getAllChatsAction,
+    getChats,
     {
       onSuccess: ({ data }) => {
         setHistory(data);

@@ -1,6 +1,9 @@
 export const GENERATE_TITLE_PROMPT = `
-Generate a concise and relevant title for a React Email template based on the given prompt.
-The title should be clear, professional, and directly related to the content of the prompt.`
+- generate a concise and professional title for an email template
+- ensure the title is clear relevant and directly related to the prompt
+- limit the title to a maximum of 10 words
+- do not mention any technology or programming language
+- do not use symbols punctuation or special characters`
 
 export const EMAIL_GENERATION_PROMPT = `
 # Introduction
@@ -52,8 +55,9 @@ Utilize React Email components with inline styles to guarantee maximum compatibi
 Maintain a professional and engaging tone throughout the email template.
 
 ## Output Format
+keys and values should be in quot except the boolean and numbers
 #### No Code
-{ from: 'powder', hasCode: false, text: 'Response to the user in natural language without generating any code.' }
+{ "hasCode": false, "text": "Response to the user in natural language without generating any code." }
 #### With Code
-{ from: 'powder', hasCode: true, text: '[A short explanation about the task in the present tense]', emailTemplateName: '[A short email template name to give an idea about the code]', code: '[React Email JSX Code in string format]', codeBreakdown: ['Array of strings, breaking down the code'], summary: '[A short finishing statement]' }
+{ "hasCode": true, "text": "[A short explanation about the task in the present tense]", "emailTemplateName": "[A short email template name to give an idea about the code]", "code": "[React Email JSX Code in string format]", "codeBreakdown": ["Array of strings, breaking down the code"], "summary": "[A short finishing statement]" }
 `

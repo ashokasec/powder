@@ -1,5 +1,4 @@
 import Logo from "@/components/application-layout/logo";
-import ChatInput from "@/components/chat-input";
 import { Button } from "@/components/ui/button";
 import TextGradient from "@/components/ui/text-gradient";
 import { geist_sans } from "@/lib/misc/fonts";
@@ -57,7 +56,7 @@ const page = () => {
           ></h3>
           <div className="relative">
             <div className="my-10 mx-auto max-w-[60%] scale-105">
-              <ChatInput />
+              {/* <ChatInput /> */}
             </div>
             <ul
               className="flex flex-wrap justify-center px-2.5 pb-4 pt-2 space-x-2.5 space-y-2.5"
