@@ -1,9 +1,51 @@
 import { geist_sans } from "@/lib/misc/fonts";
-import { Code } from "lucide-react";
+import Markdown from "markdown-to-jsx";
 import { Button } from "./ui/button";
-import { useEffect, useState } from "react";
-import { parse } from "partial-json";
-import { AssistantResponseType } from "@/lib/types/chat";
+import React from "react";
+
+const CustomAfterCode = ({
+  msgId,
+  setCodeMsgId,
+}: {
+  msgId: string;
+  setCodeMsgId: React.Dispatch<React.SetStateAction<string>>;
+}) => (
+  <div className="border p-2 rounded-md flex items-center justify-between">
+    <span>Updating</span>
+    <div className="space-x-2">
+      <Button
+        onClick={() => {
+          console.log(msgId);
+          setCodeMsgId(msgId);
+        }}
+      >
+        Code
+      </Button>
+      <Button>Preview</Button>
+    </div>
+  </div>
+);
+
+const CodeWithCustomComponent = ({
+  children,
+  className,
+  msgId,
+  setCodeMsgId,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  msgId: string;
+  setCodeMsgId: React.Dispatch<React.SetStateAction<string>>;
+}) => {
+  const isInline = !className?.includes("language-");
+  if (!isInline) return <h1 className={className}>{children}</h1>;
+
+  return (
+    <>
+      <CustomAfterCode msgId={msgId} setCodeMsgId={setCodeMsgId} />
+    </>
+  );
+};
 
 export const UserChatBubble = ({ text }: { text: string }) => {
   return (
@@ -23,86 +65,43 @@ export const UserChatBubble = ({ text }: { text: string }) => {
   );
 };
 
-export const PowderChatBubble = ({ content }: { content: string }) => {
-  const [response, setResponse] = useState<AssistantResponseType | undefined>(
-      undefined
-    );
-
-  useEffect(() => {
-    console.log(content)
-    if (content && typeof content === "string") {
-      try {
-        setResponse(parse(content));
-      } catch (error) {
-        console.error("Parsing error:", error);
-      }
-    }
-  }, [content]);
-
+export const PowderChatBubble = ({
+  content,
+  msgId,
+  setCodeMsgId,
+}: {
+  content: string;
+  msgId: string;
+  setCodeMsgId: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   return (
-    <div className="text-base leading-relaxed space-y-2 rounded-xl rounded-bl-none border-border/50 flex">
+    <div className="text-base leading-relaxed flex">
       <div className="aspect-square h-7 min-w-7 rounded-full overflow-hidden grid place-items-center select-none mr-3 mt-1 shadow-lg shadow-black">
         <img
           src="/images/powder.gif"
           className="bg-blend-multiply saturate-200 mix-blend-soft-light hue-rotate-[165deg] aspect-square invert  size-6"
         />
       </div>
-      <div className="space-y-5 text-[15px]">
-        {response?.text && (
-          <p style={geist_sans.style} className="text-gray-300 !mt-0">
-            {response?.text}
-          </p>
-        )}
-        {response?.hasCode && response?.hasCode === true && (
-          <>
-            {response?.emailTemplateName &&
-            response?.emailTemplateName.length > 0 ? (
-              <div className="py-1">
-                <div className="leading-none flex items-center justify-between p-2 rounded-lg border">
-                  <div className="flex items-center">
-                    <Code className="h-4 mr-2" />
-                    <span className="text-sm" style={geist_sans.style}>
-                      {response?.emailTemplateName}
-                    </span>
-                  </div>
-                  <div className="space-x-2">
-                    <Button
-                      size="sm"
-                      style={geist_sans.style}
-                      className="font-medium"
-                      variant="default"
-                    >
-                      Code
-                    </Button>
-                    <Button
-                      size="sm"
-                      style={geist_sans.style}
-                      className="font-medium"
-                      variant="secondary"
-                    >
-                      Preview
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            ) : null}
-            <ul
-              className="list-disc ml-4 space-y-1 text-gray-300"
-              style={geist_sans.style}
-            >
-              {response?.codeBreakdown &&
-                response?.codeBreakdown.map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
-            </ul>
-            {response?.summary && (
-              <p style={geist_sans.style} className="text-gray-300">
-                {response?.summary}
-              </p>
-            )}
-          </>
-        )}
-      </div>
+      <Markdown
+        className="powder-response text-[15px] [&>*:first-child]:mt-2"
+        style={geist_sans.style}
+        options={{
+          overrides: {
+            pre: {
+              component: ({ children }: { children: React.ReactNode }) => (
+                <CodeWithCustomComponent
+                  msgId={msgId}
+                  setCodeMsgId={setCodeMsgId}
+                >
+                  {children}
+                </CodeWithCustomComponent>
+              ),
+            },
+          },
+        }}
+      >
+        {content}
+      </Markdown>
     </div>
   );
 };

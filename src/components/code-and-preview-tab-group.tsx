@@ -9,6 +9,8 @@ import { useEffect, useState } from "react";
 import CodeBlock from "./code-block-tab";
 import EmailPreview from "./email-preview-tab";
 import { AIResponseStatus } from "@/lib/types/chat";
+import { fromMarkdown } from "mdast-util-from-markdown";
+import { visit } from "unist-util-visit";
 
 export type CurrentTabType = "code" | "preview";
 
@@ -70,19 +72,28 @@ const CopyCode = ({
 };
 
 const CodeAndPreview = ({
-  code,
+  content,
   status,
 }: {
-  code: string | undefined;
+  content: string;
   status: AIResponseStatus;
 }) => {
   const [currentTab, setCurrentTab] = useState<CurrentTabType>("code");
+  const [code, setCode] = useState("");
 
   useEffect(() => {
-    if (status === "streaming") {
-      setCurrentTab("code");
-    }
-  }, [status]);
+    if (!content) return;
+    const tree = fromMarkdown(content);
+    visit(tree, "code", (node) => {
+      setCode(node.value);
+    });
+  }, [content]);
+
+  // useEffect(() => {
+  //   if (status === "streaming") {
+  //     setCurrentTab("code");
+  //   }
+  // }, [status]);
 
   return (
     <div className="bg-transparent h-screen w-full backdrop-blur-xl">

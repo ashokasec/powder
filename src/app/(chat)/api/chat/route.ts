@@ -1,5 +1,5 @@
 import { createChatDB, createMessageDB, getChatByIdDB } from "@/lib/db/data-access/chat";
-import { appendResponseMessages, createDataStreamResponse, createIdGenerator, Message, smoothStream, streamText } from "ai";
+import { appendResponseMessages, createDataStreamResponse, Message, smoothStream, streamText } from "ai";
 import { aiProvider } from "@/lib/ai/providers";
 import { EMAIL_GENERATION_PROMPT } from "@/lib/ai/prompts";
 import { generateTitleFromUserPromptAIAccess } from "@/lib/ai/ai-access";
@@ -47,10 +47,6 @@ export async function POST(req: Request) {
                     content: userMessage
                 }],
                 experimental_transform: smoothStream({ chunking: 'word' }),
-                experimental_generateMessageId: createIdGenerator({
-                    prefix: "powder",
-                    size: 16,
-                }),
                 onFinish: async ({ response }) => {
                     const newMessage = appendResponseMessages({
                         messages: previousMessages,

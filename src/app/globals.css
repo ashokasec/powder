@@ -126,6 +126,15 @@ body {
   pre.shiki{
     @apply font-mono text-[13px] leading-[1.6] whitespace-pre-wrap break-words !p-4 !bg-transparent
   }
+  .powder-response p {
+    @apply text-gray-300 my-4
+  }
+  /* .powder-response pre {
+    display: none;
+  } */
+  .powder-response ul{
+    @apply list-disc ml-4 space-y-1 text-gray-300
+  }
 }
 
 pre.shiki code .line {
