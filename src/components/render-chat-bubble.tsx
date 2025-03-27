@@ -5,6 +5,24 @@ import { useEffect, useState } from "react";
 import { parse } from "partial-json";
 import { AssistantResponseType } from "@/lib/types/chat";
 
+export const UserChatBubble = ({ text }: { text: string }) => {
+  return (
+    <div className="flex">
+      <div className="aspect-square size-7 bg-blue-600 text-white text-sm leading-none rounded-full grid place-items-center select-none mr-3">
+        S
+      </div>
+      <div className="text-base leading-relaxed space-y-2 text-gray-300 rounded-br-none max-w-[95%]">
+        <p
+          style={geist_sans.style}
+          className="text-gray-300 text-[15px] mt-0.5"
+        >
+          {text}
+        </p>
+      </div>
+    </div>
+  );
+};
+
 export const PowderChatBubble = ({ content }: { content: string }) => {
   const [response, setResponse] = useState<AssistantResponseType | undefined>(
       undefined
@@ -14,19 +32,12 @@ export const PowderChatBubble = ({ content }: { content: string }) => {
     console.log(content)
     if (content && typeof content === "string") {
       try {
-        const parsed = parse(content);
-        console.log("Parsed content:", parsed);
-        setResponse(parsed);
+        setResponse(parse(content));
       } catch (error) {
         console.error("Parsing error:", error);
       }
     }
-    // setCount((prev) => {
-    //   console.log(prev)
-    //   return prev + 1
-    // })
   }, [content]);
-  
 
   return (
     <div className="text-base leading-relaxed space-y-2 rounded-xl rounded-bl-none border-border/50 flex">
@@ -36,7 +47,7 @@ export const PowderChatBubble = ({ content }: { content: string }) => {
           className="bg-blend-multiply saturate-200 mix-blend-soft-light hue-rotate-[165deg] aspect-square invert  size-6"
         />
       </div>
-      <div className="space-y-5 text-[15px] tracking-wide">
+      <div className="space-y-5 text-[15px]">
         {response?.text && (
           <p style={geist_sans.style} className="text-gray-300 !mt-0">
             {response?.text}

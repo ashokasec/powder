@@ -1,14 +1,15 @@
 import { createChatDB, createMessageDB, getChatByIdDB } from "@/lib/db/data-access/chat";
-import { createDataStreamResponse, Message, smoothStream, streamText } from "ai";
+import { appendResponseMessages, createDataStreamResponse, createIdGenerator, Message, smoothStream, streamText } from "ai";
 import { aiProvider } from "@/lib/ai/providers";
 import { EMAIL_GENERATION_PROMPT } from "@/lib/ai/prompts";
 import { generateTitleFromUserPromptAIAccess } from "@/lib/ai/ai-access";
+import { redirect } from "next/navigation";
 
 export async function POST(req: Request) {
 
     const { message, chatId }: { message: Message; chatId: string } = await req.json()
 
-    const chat = getChatByIdDB({ chatId })
+    const chat = await getChatByIdDB({ chatId })
 
     function getUserMessage() {
         if (message.role === "user") {
@@ -24,7 +25,14 @@ export async function POST(req: Request) {
 
     if (!chat) {
         const title = await generateTitleFromUserPromptAIAccess({ prompt: message.content })
-        await createChatDB(title)
+        const savedChatId = await createChatDB({ title, userMessage: message })
+        return Response.json({ success: true, chatId: savedChatId })
+    }
+
+    const previousMessages = chat?.messages.map((message) => message.message)
+
+    if (!previousMessages) {
+        return redirect("/")
     }
 
     await createMessageDB({ message: message, chatId })
@@ -39,10 +47,16 @@ export async function POST(req: Request) {
                     content: userMessage
                 }],
                 experimental_transform: smoothStream({ chunking: 'word' }),
+                experimental_generateMessageId: createIdGenerator({
+                    prefix: "powder",
+                    size: 16,
+                }),
                 onFinish: async ({ response }) => {
-                    console.log("response done")
-                    console.log(response)
-                    await createMessageDB({ chatId, message: response.messages[response.messages.length - 1] as Message })
+                    const newMessage = appendResponseMessages({
+                        messages: previousMessages,
+                        responseMessages: response.messages,
+                    }).at(-1)!;
+                    await createMessageDB({ chatId, message: newMessage })
                 },
             });
             result.consumeStream();

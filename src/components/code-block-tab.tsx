@@ -2,26 +2,35 @@
 
 import { useEffect, useState } from "react";
 import { codeToHtml } from "shiki";
-import { CodeType, CommonTabsContent } from "./code-and-preview-tab-group";
+import { CommonTabsContent } from "./code-and-preview-tab-group";
 
-const CodeBlock = ({ jsx }: { jsx: CodeType["jsx"] }) => {
+const CodeBlock = ({ code }: { code: string | undefined }) => {
   const [highlightedHtml, setHighlightedHtml] = useState("");
 
-  const generateCodeHtml = async () => {
-    const html = await codeToHtml(jsx, {
-      lang: "jsx",
-      theme: "aurora-x",
-    });
-    setHighlightedHtml(html);
-  };
-
   useEffect(() => {
+    if (!code) return;
+
+    const generateCodeHtml = async () => {
+      const html = await codeToHtml(code, {
+        lang: "jsx",
+        theme: "aurora-x",
+      });
+      setHighlightedHtml(html);
+    };
+
     generateCodeHtml();
-  }, [jsx]);
+  }, [code]);
 
   return (
     <CommonTabsContent value="code">
-      <div dangerouslySetInnerHTML={{ __html: highlightedHtml }} />
+      {code ? (
+        <div
+          className="text-sm"
+          dangerouslySetInnerHTML={{ __html: highlightedHtml }}
+        />
+      ) : (
+        <div className="p-4">There&apos; no code at this moment.</div>
+      )}
     </CommonTabsContent>
   );
 };

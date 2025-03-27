@@ -4,34 +4,21 @@ import connectDB from "@/lib/misc/connect-db";
 import { nanoid } from "@/lib/utils";
 import { Message as AIMessage } from "ai";
 
-export const createChatDB = async (title: string) => {
+export const createChatDB = async ({ userMessage, title }: { userMessage: AIMessage, title: string }) => {
     await connectDB()
     const chatId = nanoid(12);
 
     try {
-
         const chat = new Chat({
-            chatId,
+            id: chatId,
             title,
             messages: [],
         });
-
         const savedChat = await chat.save();
-
-        const message = new Message({
-            message: prompt,
-            chatId: savedChat.id,
-        });
-
-        const savedMessage = await message.save();
-
-        savedChat.messages.push(savedMessage._id);
-        await savedChat.save();
-
-        return savedChat.id;
-
+        await createMessageDB({ chatId, message: userMessage })
+        return savedChat.id as string;
     } catch (error) {
-        console.log(error)
+        console.log(JSON.stringify(error))
     }
 }
 

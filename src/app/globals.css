@@ -124,13 +124,13 @@ body {
     @apply bg-background text-foreground;
   } 
   pre.shiki{
-    @apply font-mono text-[15px] leading-[1.7] whitespace-pre-wrap break-words !p-4 !bg-transparent
+    @apply font-mono text-[13px] leading-[1.6] whitespace-pre-wrap break-words !p-4 !bg-transparent
   }
 }
 
 pre.shiki code .line {
   display: inline-block;
-  padding-left: 3rem; /* Ensure space for wrapped lines */
+  padding-left: 2.5rem; /* Ensure space for wrapped lines */
   text-indent: -3rem; /* Keep the first line aligned */
   overflow-wrap: break-word; /* Ensure word breaks */
   word-break: break-word; /* Extra word break support */

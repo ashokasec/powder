@@ -1,5 +1,30 @@
+// ts-nocheck
+
+"use client";
+
 import { Skeleton } from "@/components/ui/skeleton";
 import { CommonTabsContent } from "./code-and-preview-tab-group";
+
+import React, { useEffect, useState } from "react";
+import {
+  Body,
+  Button,
+  Container,
+  Column,
+  Head,
+  Heading,
+  Hr,
+  Html,
+  Img,
+  Link,
+  Preview,
+  Row,
+  Section,
+  Tailwind,
+  Text,
+} from "@react-email/components";
+import { renderToStaticMarkup } from "react-dom/server";
+import * as Babel from "@babel/standalone";
 
 const EmailPreviewSkeleton = () => {
   return (
@@ -69,28 +94,72 @@ const EmailPreviewSkeleton = () => {
   );
 };
 
-// const EmailPreview = ({ jsx }: { jsx: string }) => {
-const EmailPreview = () => {
-//   const [html, setHtml] = useState("");
+const EmailPreview = ({ code }: { code: string | undefined }) => {
+  const [html, setHtml] = useState("");
+
+  const compileAndRender = (jsxCode: string) => {
+    try {
+      const compiledCode = Babel.transform(jsxCode, {
+        presets: ["react"],
+      }).code;
+
+      const Component = new Function(
+        "React",
+        "Body",
+        "Button",
+        "Container",
+        "Column",
+        "Head",
+        "Heading",
+        "Hr",
+        "Html",
+        "Img",
+        "Link",
+        "Preview",
+        "Row",
+        "Section",
+        "Tailwind",
+        "Text",
+        `${compiledCode}; return EmailTemplate;`
+      )(
+        React,
+        Body,
+        Button,
+        Container,
+        Column,
+        Head,
+        Heading,
+        Hr,
+        Html,
+        Img,
+        Link,
+        Preview,
+        Row,
+        Section,
+        Tailwind,
+        Text
+      );
+
+      setHtml(renderToStaticMarkup(React.createElement(Component)));
+    } catch (error) {
+      console.error("Compilation Error:", error);
+      setHtml(`<pre style="color: red;">${JSON.stringify(error)}</pre>`);
+    }
+  };
+
+  useEffect(() => {
+    if (!code) {
+      setHtml(`<pre style="color: red;">There's no code</pre>`);
+      return;
+    }
+    compileAndRender(code);
+  }, []);
 
   return (
     <CommonTabsContent value="preview">
-      {/* {isPending ? (
-        <EmailPreviewSkeleton />
-      ) : !isSuccess ? (
-        <BlurFade>
-          <iframe
-            sandbox="allow-scripts allow-same-origin"
-            srcDoc={html}
-            className="w-full h-screen border"
-          />
-        </BlurFade>
-      ) : (
-        <>failed</>
-      )} */}
       <iframe
-        sandbox="allow-scripts allow-same-origin"
-        srcDoc={""}
+        sandbox="allow-scripts allow-same-origin allow-forms"
+        srcDoc={html}
         className="w-full h-screen border"
       />
       <div className="hidden">
