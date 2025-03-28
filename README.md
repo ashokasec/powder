@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Powder
 
-## Getting Started
+Powder is an AI-powered tool that generates **production-ready React Email templates** using **TailwindCSS** with **persuasive email copywriting**. It is designed to streamline the process of creating **mobile-responsive, visually appealing, and high-converting** email templates without manual coding.
 
-First, run the development server:
+![Powder's Screenshot](https://ashokasec.b-cdn.net/powder-screen.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- 🚀 **React Email Components** – Uses `Html`, `Head`, `Body`, `Container`, `Text`, `Button`, etc.
+- 🎨 **TailwindCSS Styling** – Ensures clean, responsive, and maintainable email designs.
+- ✍️ **Inline Persuasive Copy** – AI-generated, context-aware email content embedded directly within JSX.
+- 📱 **Mobile-First Design** – Optimized layouts for seamless email viewing on any device.
+- ✅ **TypeScript-Only** – Enforces type safety and best coding practices.
+- ⚡ **Instant Email Generation** – No need for separate content writing or styling.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Engineering Overview
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+#### **Tech Stack**:
+- __Next.Js__ - **Frontend & Backend**
+- **LLM APIs:**
+  - **OpenAI 4o-mini** – Used to generate concise titles from the first user prompt.
+  - **Anthropic** – Handles core email generation.
+- **MongoDB** - Database
+- **Vercel's `ai` SDK** - to interact with LLM APIs.
+- **ShadcnUI** - for UI components.
 
-## Learn More
+A separate blog will detail the engineering challenges faced, what was learned, and how they were tackled.
 
-To learn more about Next.js, take a look at the following resources:
+## Prompt
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+You can get or update the system here at [`EMAIL_GENERATION_PROMPT`](https://github.com/ashokasec/powder/blob/main/src/lib/ai/prompts.ts).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Usage
 
-## Deploy on Vercel
+Powder generates email templates based on a simple command input. If the request is vague, it may ask follow-up questions to gather more context.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Example Inputs**:
+- `email for product launch`
+- `email inviting users to beta test`
+- `email for discount offer`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Output**:
+- Proper use of React Email components.
+- Mobile-first, responsive design with TailwindCSS.
+- Persuasive, benefit-driven copy directly embedded in JSX.
+- Compliance with email best practices.
+
+**You will receive**:
+- React Email JSX code if you want to integrate it into your codebase.
+- Rendered HTML code if needed for direct usage.
+
+## Contributing
+
+If you're interested in contributing or providing feedback, feel free to [reach out](https://x.com/ashokasec). Open-source contributions may be considered based on demand.
+
+## License
+
+TBD – Not yet open-sourced.
