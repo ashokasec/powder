@@ -35,7 +35,17 @@ export async function POST(req: Request) {
         return redirect("/")
     }
 
-    await createMessageDB({ message: message, chatId })
+    const lastUserMessage = previousMessages
+        .filter((msg) => msg.role === "user")
+        .at(-1);
+
+    const isDuplicate = lastUserMessage?.content === message.content;
+
+    if (!isDuplicate) {
+        await createMessageDB({ message, chatId });
+    } else {
+        console.log("Duplicate message detected, skipping DB save.");
+    }
 
     return createDataStreamResponse({
         execute: (dataStream) => {

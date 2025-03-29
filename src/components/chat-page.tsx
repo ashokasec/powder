@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useChat } from "ai/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -12,7 +12,11 @@ import { createIdGenerator } from "ai";
 
 import ChatInput from "./chat-input";
 import { ScrollArea } from "./ui/scroll-area";
-import { PowderChatBubble, UserChatBubble } from "./render-chat-bubble";
+import {
+  PowderChatBubble,
+  PowderThinking,
+  UserChatBubble,
+} from "./render-chat-bubble";
 import CodeAndPreview from "./code-and-preview-tab-group";
 
 const FormSchema = z.object({
@@ -38,18 +42,25 @@ const ChatPage: React.FC<ChatPageProps> = ({ result, chatId }) => {
 
   const watchedPrompt = form.watch("userPrompt");
 
-  const { messages, setInput, handleSubmit, status } = useChat({
+  const { messages, setInput, handleSubmit, status, reload } = useChat({
     initialMessages: result.messages.map((m) => m.message),
     body: { chatId },
     experimental_prepareRequestBody: ({ messages }) => {
       const last = messages[messages.length - 1];
       return { chatId, message: last };
     },
-    onFinish(message) {
-      console.log("Assistant Response:", message);
-    },
     generateId: createIdGenerator({ prefix: "user", size: 16 }),
   });
+
+  useEffect(() => {
+    if (
+      messages.length === 1 &&
+      messages[0].role === "user") {
+      reload()
+    }
+  }, [messages.length]);
+
+  const memoMessages = useMemo(() => messages, [messages]);
 
   useEffect(() => {
     setInput(watchedPrompt);
@@ -60,14 +71,17 @@ const ChatPage: React.FC<ChatPageProps> = ({ result, chatId }) => {
       {/* Chat Area */}
       <div className="h-screen flex flex-col justify-between bg-[#070808]/20 border-l-0">
         {/* Header */}
-        <div className="h-14 border-b px-6 flex items-center text-[15px]" style={geist_sans.style}>
+        <div
+          className="h-14 border-b px-6 flex items-center text-[15px]"
+          style={geist_sans.style}
+        >
           {result.title}
         </div>
 
         {/* Messages */}
         <ScrollArea className="h-[calc(100vh-3.5rem)] backdrop-blur-xl bg-transparent px-6">
           <div className="flex flex-col space-y-6 pt-5 p-4">
-            {messages.map((msg, index) => (
+            {memoMessages.map((msg, index) => (
               <div key={index}>
                 {msg.role === "user" && <UserChatBubble text={msg.content} />}
                 {msg.role === "assistant" && (
@@ -80,6 +94,7 @@ const ChatPage: React.FC<ChatPageProps> = ({ result, chatId }) => {
               </div>
             ))}
           </div>
+          <PowderThinking status={status} />
           <div className="h-72" />
         </ScrollArea>
 
@@ -99,7 +114,8 @@ const ChatPage: React.FC<ChatPageProps> = ({ result, chatId }) => {
       <CodeAndPreview
         status={status}
         content={
-          result.messages.find((msg) => msg.id === selectedMsgId)?.message.content || ""
+          result.messages.find((msg) => msg.id === selectedMsgId)?.message
+            .content || ""
         }
       />
     </div>

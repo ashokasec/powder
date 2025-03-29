@@ -2,6 +2,8 @@ import { geist_sans } from "@/lib/misc/fonts";
 import Markdown from "markdown-to-jsx";
 import { Button } from "./ui/button";
 import React from "react";
+import { AIResponseStatus } from "@/lib/types/chat";
+import { AnimatedShinyText } from "./ui/shiny-text";
 
 const CustomAfterCode = ({
   msgId,
@@ -103,5 +105,22 @@ export const PowderChatBubble = ({
         {content}
       </Markdown>
     </div>
+  );
+};
+export const PowderThinking = ({ status }: { status: AIResponseStatus }) => {
+  return (
+    status === "submitted" && (
+      <div className="text-base leading-relaxed flex px-4">
+        <div className="aspect-square h-7 min-w-7 rounded-full overflow-hidden grid place-items-center select-none mr-3 mt-1 shadow-lg shadow-black">
+          <img
+            src="/images/powder.gif"
+            className="bg-blend-multiply saturate-200 mix-blend-soft-light hue-rotate-[165deg] aspect-square invert  size-6"
+          />
+        </div>
+        <AnimatedShinyText className="inline-flex mx-0 mt-1 text-[15px] tracking-wide items-center justify-center py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
+          <span style={geist_sans.style}>✨ Thinking...</span>
+        </AnimatedShinyText>
+      </div>
+    )
   );
 };
