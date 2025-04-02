@@ -102,15 +102,12 @@ const NewChatInput = () => {
     resolver: zodResolver(FormSchema),
   });
 
-  const { setInput, handleSubmit } = useChat({
+  const { setInput, handleSubmit, status } = useChat({
     experimental_prepareRequestBody: ({ messages }) => {
       const usersLastMessage = messages[messages.length - 1];
       return {
         message: usersLastMessage,
       };
-    },
-    onFinish(message, options) {
-      console.log("yo yo", message, options);
     },
     async onResponse(response) {
       const { chatId } = await response.json();
@@ -120,8 +117,12 @@ const NewChatInput = () => {
   });
 
   useEffect(() => {
-    setInput(form.watch("userPrompt"));
-  }, [form.watch("userPrompt")]);
+    const subscription = form.watch((value) => {
+      setInput(value.userPrompt || "");
+    });
+
+    return () => subscription.unsubscribe();
+  }, [form.watch]);
 
   return (
     <>
@@ -135,12 +136,13 @@ const NewChatInput = () => {
         <Form {...form}>
           <form
             onSubmit={handleSubmit}
-            className="max-w-3xl w-full mx-auto rounded-2xl relative bg-[#2f2f2f] placeholder:text-muted-foreground transition-all"
+            className="max-w-3xl w-full mx-auto rounded-2xl relative bg-[#2f2f2f] placeholder:text-muted-foreground transition-all shadow-xl z-50 shadow-[#141414]"
           >
             <div className="absolute inset-x-0 h-[1px] mx-auto shadow-2xl bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
             <FormField
               control={form.control}
               name="userPrompt"
+              disabled={status === "submitted"}
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -165,22 +167,30 @@ const NewChatInput = () => {
                   type="submit"
                   disabled={
                     form.watch("userPrompt") === "" ||
-                    form.watch("userPrompt") === undefined
+                    form.watch("userPrompt") === undefined ||
+                    status === "submitted"
                   }
-                  className="aspect-square size-9 disabled:bg-white/15 rounded-xl border-blue-200 bg-blue-600 text-white hover:bg-blue-700"
+                  className="aspect-square p-0 overflow-hidden disabled:opacity-100 size-9 disabled:bg-white/15 rounded-xl border-blue-200 bg-blue-600 text-white hover:bg-blue-700"
                   style={space_grotesk.style}
                 >
-                  <ArrowUp />
+                  {status === "submitted" ? (
+                    <img
+                      src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExand1aDVlbXhpbXlwMGQ5MGVmNGRiaGZkeTg3YXZucXplYnIwdDI1aCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/26BnatsfhXITpQ4GQ/giphy.gif"
+                      className="mix-blend-plus-lighter"
+                      alt=""
+                    />
+                  ) : (
+                    <ArrowUp />
+                  )}
                 </Button>
               </div>
             </div>
           </form>
         </Form>
       </div>
-      <div className="relative max-w-3xl mx-auto">
-        <div className="h-8 max-w-3xl w-full absolute bg-gradient-to-b from-background"></div>
+      <div className="max-w-3xl mx-auto">
         <div
-          className="space-y-5 max-w-2xl max-h-64 mx-auto overflow-y-auto min-h-[50vh] hide-scrollbar text-sm leading-relaxed pt-14 text-[#b0b0b0]"
+          className="space-y-5 max-w-2xl max-h-64 mx-auto overflow-y-auto min-h-[50vh] hide-scrollbar text-sm leading-relaxed py-14 text-[#b0b0b0]"
           style={inter.style}
         >
           {prompts.map((item) => (

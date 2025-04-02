@@ -8,10 +8,10 @@ import { CornerDownRight } from "lucide-react";
 
 function PowderAvatar() {
   return (
-    <div className="aspect-square h-7 min-w-7 rounded-full overflow-hidden grid place-items-center select-none mr-3 mt-1 shadow-lg shadow-blue-600/10">
+    <div className="aspect-square h-7 min-w-7 rounded-full overflow-hidden grid place-items-center select-none mr-3 mt-1 shadow-lg bg-[#141414] shadow-blue-600/10">
       <img
-        src="https://media3.giphy.com/media/3o7TKB3znUsUEPkjtu/giphy.webp?cid=ecf05e47uyysnfbwd4t2bf1mnkwk6ylqbdho678ukyceuetk&ep=v1_gifs_related&rid=giphy.webp&ct=g"
-        className="mix-blend-multiply aspect-square size-6 scale-150"
+        src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExeXJ5bnN5M3dqbDRzeTRjNGIzcWk0ZnE4czMyMHF4dXJhbnloMWNjaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/X7ZqM2ih5089oOFo6A/giphy.gif"
+        className="mix-blend-plus-lighter aspect-square size-6 scale-150 hue-rotate-[390deg]"
       />
     </div>
   );
