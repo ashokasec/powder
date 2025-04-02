@@ -26,6 +26,31 @@ import {
 import { renderToStaticMarkup } from "react-dom/server";
 import * as Babel from "@babel/standalone";
 
+const preprocessJSX = (jsxCode: string) => {
+  // 1. Remove TypeScript interfaces
+  jsxCode = jsxCode.replace(/interface\s+[A-Za-z0-9_]+\s*{[^}]+}/g, "");
+
+  // 2. Remove imports
+  jsxCode = jsxCode.replace(/import\s+.*?;?\n/g, "");
+
+  // 3. Rename default export to EmailTemplate
+  const exportRegex = /export\s+default\s+([A-Za-z0-9_]+)/;
+  const match = jsxCode.match(exportRegex);
+  if (match) {
+    jsxCode = jsxCode.replace(
+      exportRegex,
+      `const EmailTemplate = ${match[1]};`
+    );
+  } else {
+    jsxCode = jsxCode.replace(
+      /function\s+([A-Za-z0-9_]+)/,
+      "function EmailTemplate"
+    );
+  }
+
+  return jsxCode;
+};
+
 const EmailPreviewSkeleton = () => {
   return (
     <div className="w-full h-[calc(100vh-8rem-1px)] grid place-items-center bg-white py-6">
@@ -94,13 +119,16 @@ const EmailPreviewSkeleton = () => {
   );
 };
 
-const EmailPreview = ({ code }: { code: string | undefined }) => {
+const EmailPreview = ({ code }: { code: string }) => {
+  console.log(preprocessJSX(code));
+
   const [html, setHtml] = useState("");
 
   const compileAndRender = (jsxCode: string) => {
     try {
       const compiledCode = Babel.transform(jsxCode, {
-        presets: ["react"],
+        presets: ["react", "typescript"],
+        filename: "file.tsx",
       }).code;
 
       const Component = new Function(
@@ -152,8 +180,8 @@ const EmailPreview = ({ code }: { code: string | undefined }) => {
       setHtml(`<pre style="color: red;">There's no code</pre>`);
       return;
     }
-    compileAndRender(code);
-  }, []);
+    compileAndRender(preprocessJSX(code));
+  }, [code]);
 
   return (
     <CommonTabsContent value="preview">

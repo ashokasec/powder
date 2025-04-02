@@ -57,6 +57,7 @@ export async function POST(req: Request) {
                     content: userMessage
                 }],
                 experimental_transform: smoothStream({ chunking: 'word' }),
+                
                 onFinish: async ({ response }) => {
                     const newMessage = appendResponseMessages({
                         messages: previousMessages,

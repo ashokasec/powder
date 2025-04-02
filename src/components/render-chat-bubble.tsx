@@ -4,6 +4,18 @@ import { Button } from "./ui/button";
 import React from "react";
 import { AIResponseStatus } from "@/lib/types/chat";
 import { AnimatedShinyText } from "./ui/shiny-text";
+import { CornerDownRight } from "lucide-react";
+
+function PowderAvatar() {
+  return (
+    <div className="aspect-square h-7 min-w-7 rounded-full overflow-hidden grid place-items-center select-none mr-3 mt-1 shadow-lg shadow-blue-600/10">
+      <img
+        src="https://media3.giphy.com/media/3o7TKB3znUsUEPkjtu/giphy.webp?cid=ecf05e47uyysnfbwd4t2bf1mnkwk6ylqbdho678ukyceuetk&ep=v1_gifs_related&rid=giphy.webp&ct=g"
+        className="mix-blend-multiply aspect-square size-6 scale-150"
+      />
+    </div>
+  );
+}
 
 const CustomAfterCode = ({
   msgId,
@@ -52,8 +64,8 @@ const CodeWithCustomComponent = ({
 export const UserChatBubble = ({ text }: { text: string }) => {
   return (
     <div className="flex">
-      <div className="aspect-square size-7 bg-blue-600 text-white text-sm leading-none rounded-full grid place-items-center select-none mr-3">
-        S
+      <div className="aspect-square size-7 text-gray-400 text-sm leading-none rounded-full grid place-items-center select-none mr-3">
+        <CornerDownRight size={16} className="relative bottom-px" />
       </div>
       <div className="text-base leading-relaxed space-y-2 text-gray-300 rounded-br-none max-w-[95%]">
         <p
@@ -78,14 +90,9 @@ export const PowderChatBubble = ({
 }) => {
   return (
     <div className="text-base leading-relaxed flex">
-      <div className="aspect-square h-7 min-w-7 rounded-full overflow-hidden grid place-items-center select-none mr-3 mt-1 shadow-lg shadow-black">
-        <img
-          src="/images/powder.gif"
-          className="bg-blend-multiply saturate-200 mix-blend-soft-light hue-rotate-[165deg] aspect-square invert  size-6"
-        />
-      </div>
+      <PowderAvatar />
       <Markdown
-        className="powder-response text-[15px] [&>*:first-child]:mt-2"
+        className="powder-response text-[15px] [&>*:first-child]:mt-[6px]"
         style={geist_sans.style}
         options={{
           overrides: {
@@ -110,13 +117,8 @@ export const PowderChatBubble = ({
 export const PowderThinking = ({ status }: { status: AIResponseStatus }) => {
   return (
     status === "submitted" && (
-      <div className="text-base leading-relaxed flex px-4">
-        <div className="aspect-square h-7 min-w-7 rounded-full overflow-hidden grid place-items-center select-none mr-3 mt-1 shadow-lg shadow-black">
-          <img
-            src="/images/powder.gif"
-            className="bg-blend-multiply saturate-200 mix-blend-soft-light hue-rotate-[165deg] aspect-square invert  size-6"
-          />
-        </div>
+      <div className="text-base leading-relaxed flex px-4 pt-4">
+        <PowderAvatar />
         <AnimatedShinyText className="inline-flex mx-0 mt-1 text-[15px] tracking-wide items-center justify-center py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
           <span style={geist_sans.style}>✨ Thinking...</span>
         </AnimatedShinyText>

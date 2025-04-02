@@ -1,36 +1,16 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { codeToHtml } from "shiki";
 import { CommonTabsContent } from "./code-and-preview-tab-group";
+import Editor from "./monaco-code-editor";
 
-const CodeBlock = ({ code }: { code: string | undefined }) => {
-  const [highlightedHtml, setHighlightedHtml] = useState("");
-
-  useEffect(() => {
-    if (!code) return;
-
-    const generateCodeHtml = async () => {
-      const html = await codeToHtml(code, {
-        lang: "jsx",
-        theme: "aurora-x",
-      });
-      setHighlightedHtml(html);
-    };
-
-    generateCodeHtml();
-  }, [code]);
-
+const CodeBlock = ({
+  code,
+  setCode,
+}: {
+  code: string;
+  setCode: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   return (
     <CommonTabsContent value="code">
-      {code ? (
-        <div
-          className="text-sm"
-          dangerouslySetInnerHTML={{ __html: highlightedHtml }}
-        />
-      ) : (
-        <div className="p-4">There&apos; no code at this moment.</div>
-      )}
+      <Editor code={code} setCode={setCode} />
     </CommonTabsContent>
   );
 };

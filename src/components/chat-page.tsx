@@ -42,7 +42,7 @@ const ChatPage: React.FC<ChatPageProps> = ({ result, chatId }) => {
 
   const watchedPrompt = form.watch("userPrompt");
 
-  const { messages, setInput, handleSubmit, status, reload } = useChat({
+  const { messages, setInput, handleSubmit, status, reload, stop } = useChat({
     initialMessages: result.messages.map((m) => m.message),
     body: { chatId },
     experimental_prepareRequestBody: ({ messages }) => {
@@ -69,7 +69,7 @@ const ChatPage: React.FC<ChatPageProps> = ({ result, chatId }) => {
   return (
     <div className="w-full grid grid-cols-[1fr_1.15fr]">
       {/* Chat Area */}
-      <div className="h-screen flex flex-col justify-between bg-[#070808]/20 border-l-0">
+      <div className="h-screen flex flex-col justify-between border-l-0">
         {/* Header */}
         <div
           className="h-14 border-b px-6 flex items-center text-[15px]"
@@ -80,7 +80,7 @@ const ChatPage: React.FC<ChatPageProps> = ({ result, chatId }) => {
 
         {/* Messages */}
         <ScrollArea className="h-[calc(100vh-3.5rem)] backdrop-blur-xl bg-transparent px-6">
-          <div className="flex flex-col space-y-6 pt-5 p-4">
+          <div className="flex flex-col space-y-8 pt-7 p-4">
             {memoMessages.map((msg, index) => (
               <div key={index}>
                 {msg.role === "user" && <UserChatBubble text={msg.content} />}
@@ -100,9 +100,9 @@ const ChatPage: React.FC<ChatPageProps> = ({ result, chatId }) => {
 
         {/* Input */}
         <div className="relative h-0">
-          <div className="absolute bottom-0 w-full pt-3 flex flex-col justify-end h-72">
-            <div className="p-4 pb-0">
-              <ChatInput form={form} handleSubmit={handleSubmit} />
+          <div className="absolute bottom-0 w-full flex flex-col justify-end">
+            <div className="px-4 pb-0">
+              <ChatInput status={status} stop={stop} form={form} handleSubmit={handleSubmit} />
               <div className="h-4 w-full bg-background" />
             </div>
           </div>

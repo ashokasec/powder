@@ -121,7 +121,7 @@ const CodeAndPreview = ({
             <CopyCode currentTab={currentTab} code={code} />
           </div>
         </TabsList>
-        <CodeBlock code={code} />
+        <CodeBlock code={code} setCode={setCode} />
         {<EmailPreview code={code} />}
       </Tabs>
     </div>
