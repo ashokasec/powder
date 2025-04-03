@@ -140,7 +140,7 @@ const NewChatInput = ({ session }: { session: Session | null }) => {
         <Form {...form}>
           <form
             onSubmit={handleSubmit}
-            className="max-w-3xl w-full mx-auto rounded-2xl relative bg-[#2f2f2f] placeholder:text-muted-foreground transition-all shadow-xl z-50 shadow-[#141414]"
+            className="max-w-3xl w-full mx-auto rounded-2xl relative bg-[#2f2f2f] placeholder:text-muted-foreground transition-all shadow-xl z-50 shadow-background"
           >
             <div className="absolute inset-x-0 h-[1px] mx-auto shadow-2xl bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
             <FormField

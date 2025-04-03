@@ -2,7 +2,7 @@
 
 Powder is an AI-powered tool that generates **production-ready React Email templates** using **TailwindCSS** with **persuasive email copywriting**. It is designed to streamline the process of creating **mobile-responsive, visually appealing, and high-converting** email templates without manual coding.
 
-![Powder's Screenshot](https://ashokasec.b-cdn.net/powder-screen.png)
+![Powder's Landing Page](https://ashokasec.b-cdn.net/powder-screen.png)
 
 ## Features
 
