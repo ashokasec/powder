@@ -131,6 +131,10 @@ const EmailPreview = ({ code }: { code: string }) => {
         filename: "file.tsx",
       }).code;
 
+      if (!compiledCode) {
+        throw new Error("Babel failed to compile the code.");
+      }
+
       const Component = new Function(
         "React",
         "Body",
@@ -171,13 +175,23 @@ const EmailPreview = ({ code }: { code: string }) => {
       setHtml(renderToStaticMarkup(React.createElement(Component)));
     } catch (error) {
       console.error("Compilation Error:", error);
-      setHtml(`<pre style="color: red;">${JSON.stringify(error)}</pre>`);
+      setHtml(`
+        <div style="padding: 20px; background: #fee; color: red; border: 1px solid red;">
+          <h3>Compilation Error</h3>
+          <pre>${JSON.stringify(error)}</pre>
+        </div>
+      `);
     }
   };
 
   useEffect(() => {
-    if (!code) {
-      setHtml(`<pre style="color: red;">There's no code</pre>`);
+    if (!code?.trim()) {
+      setHtml(`
+        <div style="padding: 20px; background: #fffae5; color: #d87d00; border: 1px solid #d87d00;">
+          <h3>No Code Provided</h3>
+          <p>Please enter valid JSX code to preview.</p>
+        </div>
+      `);
       return;
     }
     compileAndRender(preprocessJSX(code));
@@ -187,9 +201,13 @@ const EmailPreview = ({ code }: { code: string }) => {
     <CommonTabsContent value="preview">
       <iframe
         sandbox="allow-scripts allow-same-origin allow-forms"
-        srcDoc={html}
+        srcDoc={
+          html ||
+          `<div style="padding: 20px; text-align: center;">Loading preview...</div>`
+        }
         className="w-full h-screen border"
       />
+
       <div className="hidden">
         <EmailPreviewSkeleton />
       </div>
