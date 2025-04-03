@@ -4,8 +4,14 @@ import { aiProvider } from "@/lib/ai/providers";
 import { EMAIL_GENERATION_PROMPT } from "@/lib/ai/prompts";
 import { generateTitleFromUserPromptAIAccess } from "@/lib/ai/ai-access";
 import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth/auth";
 
 export async function POST(req: Request) {
+
+    const session = await auth()
+    if (!session) {
+        return Response.json({ error: "User not authenticated" }, { status: 403 })
+    }
 
     const { message, chatId }: { message: Message; chatId: string } = await req.json()
 
@@ -57,7 +63,7 @@ export async function POST(req: Request) {
                     content: userMessage
                 }],
                 experimental_transform: smoothStream({ chunking: 'word' }),
-                
+
                 onFinish: async ({ response }) => {
                     const newMessage = appendResponseMessages({
                         messages: previousMessages,

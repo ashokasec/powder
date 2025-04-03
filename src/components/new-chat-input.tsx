@@ -12,6 +12,9 @@ import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { AutosizeTextarea } from "./ui/resizable-textarea";
 import { Button } from "./ui/button";
 import { ArrowUp } from "lucide-react";
+import { Session } from "next-auth";
+import { Github } from "@/lib/misc/logo";
+import { signIn } from "next-auth/react";
 
 const prompts = [
   {
@@ -91,7 +94,7 @@ const prompts = [
   },
 ];
 
-const NewChatInput = () => {
+const NewChatInput = ({ session }: { session: Session | null }) => {
   const FormSchema = z.object({
     userPrompt: z.string(),
   });
@@ -127,6 +130,7 @@ const NewChatInput = () => {
   return (
     <>
       <div className="h-[50vh] flex flex-col items-center justify-end">
+        <span className="text-[10px] mb-10 tracking-widest opacity-50 uppercase">powder <span className="font-bold">.</span> ashokasec <span className="font-bold">.</span> com</span>
         <h1
           className="text-3xl font-semibold leading-tight mb-12"
           style={arOneSans.style}
@@ -163,26 +167,43 @@ const NewChatInput = () => {
             <div className="p-2 flex justify-between items-center">
               <div></div>
               <div className="flex space-x-1.5">
-                <Button
-                  type="submit"
-                  disabled={
-                    form.watch("userPrompt") === "" ||
-                    form.watch("userPrompt") === undefined ||
-                    status === "submitted"
-                  }
-                  className="aspect-square p-0 overflow-hidden disabled:opacity-100 size-9 disabled:bg-white/15 rounded-xl border-blue-200 bg-blue-600 text-white hover:bg-blue-700"
-                  style={space_grotesk.style}
-                >
-                  {status === "submitted" ? (
-                    <img
-                      src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExand1aDVlbXhpbXlwMGQ5MGVmNGRiaGZkeTg3YXZucXplYnIwdDI1aCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/26BnatsfhXITpQ4GQ/giphy.gif"
-                      className="mix-blend-plus-lighter"
-                      alt=""
-                    />
-                  ) : (
-                    <ArrowUp />
-                  )}
-                </Button>
+                {!session ? (
+                  <span className="flex items-center space-x-2 text-sm">
+                    <span className="opacity-15 tracking-wide">
+                      Sign In with
+                    </span>
+                    <Button
+                      onClick={() => signIn()}
+                      className="aspect-square p-0 overflow-hidden disabled:opacity-100 size-9 rounded-xl bg-white/10 text-white hover:bg-white/5 border border-gray-500/30"
+                      style={space_grotesk.style}
+                    >
+                      <span className="scale-[1.2]">
+                        <Github />
+                      </span>
+                    </Button>
+                  </span>
+                ) : (
+                  <Button
+                    type="submit"
+                    disabled={
+                      form.watch("userPrompt") === "" ||
+                      form.watch("userPrompt") === undefined ||
+                      status === "submitted"
+                    }
+                    className="aspect-square p-0 overflow-hidden disabled:opacity-100 size-9 disabled:bg-white/15 rounded-xl border-blue-200 bg-blue-600 text-white hover:bg-blue-700"
+                    style={space_grotesk.style}
+                  >
+                    {status === "submitted" ? (
+                      <img
+                        src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExand1aDVlbXhpbXlwMGQ5MGVmNGRiaGZkeTg3YXZucXplYnIwdDI1aCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/26BnatsfhXITpQ4GQ/giphy.gif"
+                        className="mix-blend-plus-lighter"
+                        alt=""
+                      />
+                    ) : (
+                      <ArrowUp />
+                    )}
+                  </Button>
+                )}
               </div>
             </div>
           </form>

@@ -104,6 +104,12 @@ body {
   }
 }
 
+.line-clamp-1{
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
 pre.shiki code .line {
   display: inline-block;
   padding-left: 2.5rem; /* Ensure space for wrapped lines */
