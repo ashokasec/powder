@@ -92,7 +92,7 @@ export const PowderChatBubble = ({
     <div className="text-base leading-relaxed flex">
       <PowderAvatar />
       <Markdown
-        className="powder-response text-[15px] [&>*:first-child]:mt-[6px]"
+        className="powder-response text-[15px] [&>*:first-child]:mt-[6px] space-y-6"
         style={geist_sans.style}
         options={{
           overrides: {

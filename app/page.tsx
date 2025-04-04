@@ -1,5 +1,5 @@
 import AppSidebar from "@/components/application-layout/sidebar";
-import NewChatInput from "@/components/new-chat-input";
+import { NewChatInput } from "@/components/new-chat-input";
 import { auth } from "@/lib/auth/auth";
 
 const page = async () => {

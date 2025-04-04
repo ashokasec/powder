@@ -53,10 +53,8 @@ const ChatPage: React.FC<ChatPageProps> = ({ result, chatId }) => {
   });
 
   useEffect(() => {
-    if (
-      messages.length === 1 &&
-      messages[0].role === "user") {
-      reload()
+    if (messages.length === 1 && messages[0].role === "user") {
+      reload();
     }
   }, [messages.length]);
 
@@ -102,7 +100,12 @@ const ChatPage: React.FC<ChatPageProps> = ({ result, chatId }) => {
         <div className="relative h-0">
           <div className="absolute bottom-0 w-full flex flex-col justify-end">
             <div className="px-4 pb-0">
-              <ChatInput status={status} stop={stop} form={form} handleSubmit={handleSubmit} />
+              <ChatInput
+                status={status}
+                stop={stop}
+                form={form}
+                handleSubmit={handleSubmit}
+              />
               <div className="h-4 w-full bg-background" />
             </div>
           </div>
@@ -110,12 +113,13 @@ const ChatPage: React.FC<ChatPageProps> = ({ result, chatId }) => {
       </div>
 
       {/* Code Preview Panel */}
-      {/* Uncomment if you want to re-enable code preview */}
       <CodeAndPreview
         status={status}
         content={
-          result.messages.find((msg) => msg.id === selectedMsgId)?.message
-            .content || ""
+          status === "streaming"
+            ? memoMessages.filter((msg) => msg.role === "assistant")[-1]?.content
+            : memoMessages.find((msg) => msg.id === selectedMsgId)?.content ||
+              ""
         }
       />
     </div>

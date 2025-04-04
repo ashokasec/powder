@@ -96,11 +96,11 @@ body {
   span.powder-response {
     @apply mt-[6px] text-[#d1d5db]
   }
-  /* .powder-response pre {
-    display: none;
-  } */
   .powder-response ul{
-    @apply list-disc ml-4 space-y-1 text-gray-300
+    @apply list-disc ml-4 space-y-2 text-gray-300
+  }
+  .powder-response strong{
+    @apply text-gray-100 font-semibold tracking-wide
   }
 }
 
