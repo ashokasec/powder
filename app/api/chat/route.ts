@@ -5,6 +5,7 @@ import { EMAIL_GENERATION_PROMPT } from "@/lib/ai/prompts";
 import { generateTitleFromUserPromptAIAccess } from "@/lib/ai/ai-access";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/auth";
+import { authenticatedRateLimit } from "@/lib/security/rate-limit";
 
 export async function POST(req: Request) {
 
@@ -12,6 +13,13 @@ export async function POST(req: Request) {
     if (!session) {
         return Response.json({ error: "User not authenticated" }, { status: 403 })
     }
+
+    const [allowRequest, rateLimitError] = await authenticatedRateLimit(req, session.user.image);
+
+    if (!allowRequest) {
+        return Response.json({ error: rateLimitError }, { status: 429 })
+    }
+
 
     const { message, chatId }: { message: Message; chatId: string } = await req.json()
 

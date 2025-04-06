@@ -13,6 +13,7 @@
     "@ai-sdk/google": "^1.2.5",
     "@ai-sdk/openai": "^1.2.5",
     "@anthropic-ai/sdk": "^0.39.0",
+    "@arcjet/next": "^1.0.0-beta.5",
     "@babel/standalone": "^7.26.10",
     "@hookform/resolvers": "^3.10.0",
     "@monaco-editor/react": "^4.7.0",
