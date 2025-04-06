@@ -2,7 +2,7 @@
 
 Powder is an AI-powered tool that generates **production-ready React Email templates** using **TailwindCSS** with **persuasive email copywriting**. It is designed to streamline the process of creating **mobile-responsive, visually appealing, and high-converting** email templates without manual coding.
 
-![Powder's Landing Page](https://ashokasec.b-cdn.net/powder-screen.png)
+![Powder's Chat Page](https://cdn.ashokasec.com/powder-demo.png)
 
 ## Features
 
@@ -19,7 +19,7 @@ Powder is an AI-powered tool that generates **production-ready React Email templ
 - __Next.Js__ - **Frontend & Backend**
 - **LLM APIs:**
   - **OpenAI 4o-mini** – Used to generate concise titles from the first user prompt.
-  - **Anthropic** – Handles core email generation.
+  - **Anthropic** and **Gemini API** – Handles core email generation.
 - **MongoDB** - Database
 - **Vercel's `ai` SDK** - to interact with LLM APIs.
 - **ShadcnUI** - for UI components.
