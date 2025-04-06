@@ -35,10 +35,10 @@ const ChatInput = ({
           &nbsp;
         </div>
         <form
-          onSubmit={() => {
-            handleSubmit();
+          onSubmit={(event) => {
+            handleSubmit(event);
             form.setValue("userPrompt", "");
-          }}  
+          }}
           className="rounded-2xl relative bg-[#2f2f2f] placeholder:text-muted-foreground transition-all"
         >
           <div className="absolute inset-x-0 h-[1px] mx-auto -top-px shadow-2xl bg-gradient-to-r from-transparent via-blue-500 to-transparent" />

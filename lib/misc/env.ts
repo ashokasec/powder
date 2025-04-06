@@ -4,10 +4,12 @@ import { z } from "zod";
 export const env = createEnv({
     server: {
         MONGODB_URI: z.string(),
-        OPENAI_API_KEY: z.string()
+        OPENAI_API_KEY: z.string(),
+        ARCJET_KEY: z.string(),
     },
     runtimeEnv: {
         OPENAI_API_KEY: process.env.OPENAI_API_KEY,
         MONGODB_URI: process.env.MONGODB_URI,
+        ARCJET_KEY: process.env.ARCJET_KEY
     },
 });
